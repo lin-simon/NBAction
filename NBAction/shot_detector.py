@@ -8,6 +8,7 @@ from utils import score, detect_down, detect_up, in_hoop_region, clean_hoop_pos,
 class ShotDetector:
     def __init__(self):
         self.model = YOLO("runs/detect/train5/weights/best.pt")
+        #TODO: train model for 3, dunking, etc
         self.class_names = ['Basketball', 'Basketball Hoop']
 
         #self.cap = cv2.VideoCapture(0)
@@ -44,7 +45,7 @@ class ShotDetector:
 
             if not ret:
                 break
-            #if self.frame_count % 2 == 0: potential performance boost mayb??
+            #if self.frame_count % 2 == 0: potential performance boost maybe 
             results = self.model(self.frame, stream=True)
 
             for r in results:
@@ -86,7 +87,7 @@ class ShotDetector:
         for i in range(0, len(self.ball_pos)):
             cv2.circle(self.frame, self.ball_pos[i][0], 2, (0, 0, 255), 2)
 
-        # Clean hoop motion and display current hoop center
+
         if len(self.hoop_pos) > 1:
             self.hoop_pos = clean_hoop_pos(self.hoop_pos)
             cv2.circle(self.frame, self.hoop_pos[-1][0], 2, (128, 128, 0), 2)
