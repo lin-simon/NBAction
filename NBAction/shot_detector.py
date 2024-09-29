@@ -13,7 +13,7 @@ class ShotDetector:
         #self.cap = cv2.VideoCapture(0)
 
         self.cap = cv2.VideoCapture("testset/1.mov")
-
+        
         self.ball_pos = []
         self.hoop_pos = []  
 
@@ -35,7 +35,7 @@ class ShotDetector:
         self.show_score_text = False
         self.score_text_frame_count = 0
         self.score_text_duration = 90
-
+        cv2.namedWindow('NBAction', cv2.WINDOW_GUI_NORMAL)
         self.run()
 
     def run(self):
