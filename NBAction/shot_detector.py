@@ -87,7 +87,6 @@ class ShotDetector:
         for i in range(0, len(self.ball_pos)):
             cv2.circle(self.frame, self.ball_pos[i][0], 2, (0, 0, 255), 2)
 
-
         if len(self.hoop_pos) > 1:
             self.hoop_pos = clean_hoop_pos(self.hoop_pos)
             cv2.circle(self.frame, self.hoop_pos[-1][0], 2, (128, 128, 0), 2)
