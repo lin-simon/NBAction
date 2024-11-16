@@ -9,7 +9,7 @@ class ShotDetector:
     def __init__(self):
         self.model = YOLO("runs/detect/train5/weights/best.pt")
         #TODO: train model for 3, dunking, etc
-        self.class_names = ['Basketball', 'Basketball Hoop']
+        self.class_names = ['Basketball', 'Basketball Hoop','Layup','Shooting','Blocking']
 
         #self.cap = cv2.VideoCapture(0)
 
