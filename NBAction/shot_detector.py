@@ -7,9 +7,9 @@ from utils import score, detect_down, detect_up, in_hoop_region, clean_hoop_pos,
 
 class ShotDetector:
     def __init__(self):
-        self.model = YOLO("runs/detect/train5/weights/best.pt")
+        self.model = YOLO("runs/detect/train6/weights/best.pt")
         #TODO: train model for 3, dunking, etc
-        self.class_names = ['Basketball', 'Basketball Hoop','Layup','Shooting','Blocking']
+        self.class_names = ['Basketball', 'Basketball Hoop','shooting']
 
         #self.cap = cv2.VideoCapture(0)
 
@@ -47,7 +47,7 @@ class ShotDetector:
                 break
             #if self.frame_count % 2 == 0: potential performance boost maybe 
             results = self.model(self.frame, stream=True)
-
+            
             for r in results:
                 boxes = r.boxes
                 for box in boxes:
@@ -62,13 +62,44 @@ class ShotDetector:
 
                     center = (int(x1 + w / 2), int(y1 + h / 2))
 
-                    if (conf > .3 or (in_hoop_region(center, self.hoop_pos) and conf > 0.15)) and current_class == "Basketball":
+                    if (conf > 0.4 or (in_hoop_region(center, self.hoop_pos) and conf > 0.15)) and current_class == "Basketball":
                         self.ball_pos.append((center, self.frame_count, w, h, conf))
                         cvzone.cornerRect(self.frame, (x1, y1, w, h))
+                        cv2.putText(
+                            self.frame, 
+                            f"Basketball ({conf:.2f})", 
+                            (x1, y1 - 10), 
+                            cv2.FONT_HERSHEY_SIMPLEX, 
+                            0.5, 
+                            (0, 255, 0), 
+                            2
+                        )
 
-                    if conf > .5 and current_class == "Basketball Hoop":
+                    if conf > 0.5 and current_class == "Basketball Hoop":
                         self.hoop_pos.append((center, self.frame_count, w, h, conf))
                         cvzone.cornerRect(self.frame, (x1, y1, w, h))
+                        cv2.putText(
+                            self.frame, 
+                            f"Hoop ({conf:.2f})", 
+                            (x1, y1 - 10), 
+                            cv2.FONT_HERSHEY_SIMPLEX, 
+                            0.5, 
+                            (255, 0, 0), 
+                            2
+                        )
+
+                    if conf > 0.2 and current_class == "shooting":
+                        self.hoop_pos.append((center, self.frame_count, w, h, conf))
+                        cvzone.cornerRect(self.frame, (x1, y1, w, h))
+                        cv2.putText(
+                            self.frame, 
+                            f"Shooting ({conf:.2f})", 
+                            (x1, y1 - 10), 
+                            cv2.FONT_HERSHEY_SIMPLEX, 
+                            0.5, 
+                            (0, 0, 255), 
+                            2
+                        )
 
             self.clean_motion()
             self.shot_detection()

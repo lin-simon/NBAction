@@ -1,6 +1,6 @@
-train: \basketball.v1i.yolov8\test\images
-val: basketball.v1i.yolov8\train\images
-test: basketball.v1i.yolov8\valid\images
+train: nbaction-cps843.v1i.yolov8\test\images
+val: nbaction-cps843.v1i.yolov8\train\images
+test: nbaction-cps843.v1i.yolov8\valid\images
 
-nc: 2
-names: ['Basketball', 'Basketball Hoop']
+nc: 3
+names: ['Basketball', 'Basketball Hoop','shooting']
