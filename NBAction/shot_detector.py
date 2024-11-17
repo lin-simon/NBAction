@@ -7,14 +7,12 @@ from utils import score, detect_down, detect_up, in_hoop_region, clean_hoop_pos,
 
 class ShotDetector:
     def __init__(self):
-        self.model = YOLO("runs/detect/train6/weights/best.pt")
+        self.model = YOLO("runs/detect/train8/weights/best.pt")
         #TODO: train model for 3, dunking, etc
-        self.class_names = ['Basketball', 'Basketball Hoop','shooting']
+        self.class_names = ['Basketball', 'Basketball Hoop','shooting', 'Defence']
 
         #self.cap = cv2.VideoCapture(0)
-
-        self.cap = cv2.VideoCapture("testset/1.mov")
-        
+        self.cap = cv2.VideoCapture("testset/test.mov")
         self.ball_pos = []
         self.hoop_pos = []  
 
@@ -94,6 +92,18 @@ class ShotDetector:
                         cv2.putText(
                             self.frame, 
                             f"Shooting ({conf:.2f})", 
+                            (x1, y1 - 10), 
+                            cv2.FONT_HERSHEY_SIMPLEX, 
+                            0.5, 
+                            (0, 0, 255), 
+                            2
+                        )
+                    if conf > 0.2 and current_class == "Defence":
+                        self.hoop_pos.append((center, self.frame_count, w, h, conf))
+                        cvzone.cornerRect(self.frame, (x1, y1, w, h))
+                        cv2.putText(
+                            self.frame, 
+                            f"Defence ({conf:.2f})", 
                             (x1, y1 - 10), 
                             cv2.FONT_HERSHEY_SIMPLEX, 
                             0.5, 
