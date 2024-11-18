@@ -12,7 +12,7 @@ class ShotDetector:
 
         #self.cap = cv2.VideoCapture(0) -- for live capture of games
         #self.cap = cv2.VideoCapture("testset/TMU.mp4")
-        self.cap = cv2.VideoCapture("testset/1.mov") 
+        self.cap = cv2.VideoCapture("testset/2.mov") 
         self.ball_pos = []
         self.hoop_pos = []  
         self.frame_count = 0
@@ -64,28 +64,28 @@ class ShotDetector:
                         self.ball_pos.append((center, self.frame_count, w, h, conf))
                         x2, y2 = x1 + w, y1 + h
                         cv2.rectangle(self.frame, (x1, y1), (x2, y2), (0, 0, 255), thickness=2)
-                        cv2.putText(self.frame, f"Basketball ({conf:.2f})", (x1, y1 - 10), self.font, 0.7, (0, 0, 255), 2, lineType=cv2.LINE_AA)
+                        cv2.putText(self.frame, f"Basketball ({conf:.2f})", (x1, y1 - 10), self.font, 0.6, (0, 0, 255), 1, lineType=cv2.LINE_AA)
 
                     if conf > 0.5 and current_class == "Basketball Hoop":
                         self.hoop_pos.append((center, self.frame_count, w, h, conf))
                         x2, y2 = x1 + w, y1 + h
                         cv2.rectangle(self.frame, (x1, y1), (x2, y2), (0, 255, 0), thickness=2)
-                        cv2.putText(self.frame, f"Basketball Hoop ({conf:.2f})", (x1, y1 - 10), self.font, 0.7, (0, 255, 0), 2, lineType=cv2.LINE_AA)
+                        cv2.putText(self.frame, f"Basketball Hoop ({conf:.2f})", (x1, y1 - 10), self.font, 0.6, (0, 255, 0), 1, lineType=cv2.LINE_AA)
                         
                     if conf > 0.2 and current_class == "Defence":
                         x2, y2 = x1 + w, y1 + h
                         cv2.rectangle(self.frame, (x1, y1), (x2, y2), (0, 0, 0), thickness=2)
-                        cv2.putText(self.frame, f"Defence ({conf:.2f})", (x1, y1 - 10), self.font, 0.7, (0, 0, 0), 2, lineType=cv2.LINE_AA)
+                        cv2.putText(self.frame, f"Defence ({conf:.2f})", (x1, y1 - 10), self.font, 0.6, (0, 0, 0), 1, lineType=cv2.LINE_AA)
                         
                     if conf > 0.1 and current_class == "Player":
                         x2, y2 = x1 + w, y1 + h
                         cv2.rectangle(self.frame, (x1, y1), (x2, y2), (0, 152, 248), thickness=2)
-                        cv2.putText(self.frame, f"Player ({conf:.2f})", (x1, y1 - 10), self.font, 0.7, (0, 152, 248), 2, lineType=cv2.LINE_AA)
+                        cv2.putText(self.frame, f"Player ({conf:.2f})", (x1, y1 - 10), self.font, 0.6, (0, 152, 248), 1, lineType=cv2.LINE_AA)
                         
                     if conf > 0 and current_class == "shooting":
                         self.hoop_pos.append((center, self.frame_count, w, h, conf))
                         cvzone.cornerRect(self.frame, (x1, y1, w, h), colorR=(255,0,0))
-                        cv2.putText(self.frame, f"Shooting ({conf:.2f})", (x1, y1 - 10), self.font, 0.7, (255,0,0), 2, lineType=cv2.LINE_AA)
+                        cv2.putText(self.frame, f"Shooting ({conf:.2f})", (x1, y1 - 10), self.font, 0.6, (255,0,0), 1, lineType=cv2.LINE_AA)
                         
             self.clean_motion()
             self.shot_detection()
@@ -161,7 +161,7 @@ class ShotDetector:
             self.fade_counter -= 1
 
     def display_text(self, text):
-        cv2.putText(self.frame, text, (50, 50), cv2.FONT_HERSHEY_PLAIN, 4, (0, 0, 0), 6)
+        cv2.putText(self.frame, text, (50, 50), self.font, 4, (0, 0, 0), 6)
 
 if __name__ == "__main__":
     ShotDetector()
