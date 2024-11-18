@@ -7,15 +7,14 @@ from utils import score, detect_down, detect_up, in_hoop_region, clean_hoop_pos,
 
 class ShotDetector:
     def __init__(self):
-        self.model = YOLO("runs/detect/train8/weights/best.pt")
-        #TODO: train model for 3, dunking, etc
-        self.class_names = ['Basketball', 'Basketball Hoop','shooting', 'Defence']
+        self.model = YOLO("runs/detect/train9/weights/best.pt")
+        self.class_names = ['Basketball', 'Basketball Hoop', 'Defence', 'Player', 'shooting']
 
-        #self.cap = cv2.VideoCapture(0)
-        self.cap = cv2.VideoCapture("testset/test.mov")
+        #self.cap = cv2.VideoCapture(0) -- for live capture of games
+        #self.cap = cv2.VideoCapture("testset/TMU.mp4")
+        self.cap = cv2.VideoCapture("testset/TMU.mp4") 
         self.ball_pos = []
         self.hoop_pos = []  
-
         self.frame_count = 0
         self.frame = None
         self.frame2 = None
@@ -27,13 +26,14 @@ class ShotDetector:
         self.up_frame = 0
         self.down_frame = 0
 
-        self.fade_frames = 1
+        self.fade_frames = 0
         self.fade_counter = 0
         self.overlay_color = (0, 0, 0)
 
         self.show_score_text = False
         self.score_text_frame_count = 0
         self.score_text_duration = 90
+        self.font = cv2.FONT_HERSHEY_DUPLEX
         cv2.namedWindow('NBAction', cv2.WINDOW_GUI_NORMAL)
         self.run()
 
@@ -85,21 +85,9 @@ class ShotDetector:
                             (255, 0, 0), 
                             2
                         )
-
-                    if conf > 0.2 and current_class == "shooting":
-                        self.hoop_pos.append((center, self.frame_count, w, h, conf))
-                        cvzone.cornerRect(self.frame, (x1, y1, w, h))
-                        cv2.putText(
-                            self.frame, 
-                            f"Shooting ({conf:.2f})", 
-                            (x1, y1 - 10), 
-                            cv2.FONT_HERSHEY_SIMPLEX, 
-                            0.5, 
-                            (0, 0, 255), 
-                            2
-                        )
+                        
                     if conf > 0.2 and current_class == "Defence":
-                        self.hoop_pos.append((center, self.frame_count, w, h, conf))
+                        #self.hoop_pos.append((center, self.frame_count, w, h, conf))
                         cvzone.cornerRect(self.frame, (x1, y1, w, h))
                         cv2.putText(
                             self.frame, 
@@ -110,7 +98,17 @@ class ShotDetector:
                             (0, 0, 255), 
                             2
                         )
-
+                    if conf > 0.1 and current_class == "Player":
+                        #self.hoop_pos.append((center, self.frame_count, w, h, conf))
+                        x2, y2 = x1 + w, y1 + h
+                        cv2.rectangle(self.frame, (x1, y1), (x2, y2), (0, 152, 248), thickness=2)
+                        cv2.putText(self.frame, f"Player ({conf:.2f})", (x1, y1 - 10), self.font, 0.7, (0, 152, 248), 2, lineType=cv2.LINE_AA)
+                        
+                    if conf > 0 and current_class == "shooting":
+                        self.hoop_pos.append((center, self.frame_count, w, h, conf))
+                        cvzone.cornerRect(self.frame, (x1, y1, w, h), colorR=(255,0,0))
+                        cv2.putText(self.frame, f"Shooting ({conf:.2f})", (x1, y1 - 10), self.font, 0.7, (255,0,0), 2, lineType=cv2.LINE_AA)
+                        
             self.clean_motion()
             self.shot_detection()
             self.display_score()    
@@ -124,14 +122,20 @@ class ShotDetector:
         cv2.destroyAllWindows()
 
     def clean_motion(self):
-        self.ball_pos = clean_ball_pos(self.ball_pos, self.frame_count)
-        for i in range(0, len(self.ball_pos)):
-            cv2.circle(self.frame, self.ball_pos[i][0], 2, (0, 0, 255), 2)
+        try:
+            self.ball_pos = clean_ball_pos(self.ball_pos, self.frame_count)
+            for i in range(len(self.ball_pos)):
+                cv2.circle(self.frame, self.ball_pos[i][0], 2, (0, 0, 255), 2)
 
-        if len(self.hoop_pos) > 1:
-            self.hoop_pos = clean_hoop_pos(self.hoop_pos)
-            cv2.circle(self.frame, self.hoop_pos[-1][0], 2, (128, 128, 0), 2)
-
+            if len(self.hoop_pos) > 1:
+                self.hoop_pos = clean_hoop_pos(self.hoop_pos)
+                cv2.circle(self.frame, self.hoop_pos[-1][0], 2, (128, 128, 0), 2)
+        #hoop fix when oob
+        except IndexError as e: 
+            print(f"IndexError encountered in clean_motion: {e}")
+        except Exception as e:
+            print(f"Unexpected error in clean_motion: {e}")
+            
     def shot_detection(self):
         if len(self.hoop_pos) > 0 and len(self.ball_pos) > 0:
             if not self.up:
