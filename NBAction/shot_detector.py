@@ -12,7 +12,7 @@ class ShotDetector:
 
         #self.cap = cv2.VideoCapture(0) -- for live capture of games
         #self.cap = cv2.VideoCapture("testset/TMU.mp4")
-        self.cap = cv2.VideoCapture("testset/TMU.mp4") 
+        self.cap = cv2.VideoCapture("testset/1.mov") 
         self.ball_pos = []
         self.hoop_pos = []  
         self.frame_count = 0
@@ -62,44 +62,22 @@ class ShotDetector:
 
                     if (conf > 0.4 or (in_hoop_region(center, self.hoop_pos) and conf > 0.15)) and current_class == "Basketball":
                         self.ball_pos.append((center, self.frame_count, w, h, conf))
-                        cvzone.cornerRect(self.frame, (x1, y1, w, h))
-                        cv2.putText(
-                            self.frame, 
-                            f"Basketball ({conf:.2f})", 
-                            (x1, y1 - 10), 
-                            cv2.FONT_HERSHEY_SIMPLEX, 
-                            0.5, 
-                            (0, 255, 0), 
-                            2
-                        )
+                        x2, y2 = x1 + w, y1 + h
+                        cv2.rectangle(self.frame, (x1, y1), (x2, y2), (0, 0, 255), thickness=2)
+                        cv2.putText(self.frame, f"Basketball ({conf:.2f})", (x1, y1 - 10), self.font, 0.7, (0, 0, 255), 2, lineType=cv2.LINE_AA)
 
                     if conf > 0.5 and current_class == "Basketball Hoop":
                         self.hoop_pos.append((center, self.frame_count, w, h, conf))
-                        cvzone.cornerRect(self.frame, (x1, y1, w, h))
-                        cv2.putText(
-                            self.frame, 
-                            f"Hoop ({conf:.2f})", 
-                            (x1, y1 - 10), 
-                            cv2.FONT_HERSHEY_SIMPLEX, 
-                            0.5, 
-                            (255, 0, 0), 
-                            2
-                        )
+                        x2, y2 = x1 + w, y1 + h
+                        cv2.rectangle(self.frame, (x1, y1), (x2, y2), (0, 255, 0), thickness=2)
+                        cv2.putText(self.frame, f"Basketball Hoop ({conf:.2f})", (x1, y1 - 10), self.font, 0.7, (0, 255, 0), 2, lineType=cv2.LINE_AA)
                         
                     if conf > 0.2 and current_class == "Defence":
-                        #self.hoop_pos.append((center, self.frame_count, w, h, conf))
-                        cvzone.cornerRect(self.frame, (x1, y1, w, h))
-                        cv2.putText(
-                            self.frame, 
-                            f"Defence ({conf:.2f})", 
-                            (x1, y1 - 10), 
-                            cv2.FONT_HERSHEY_SIMPLEX, 
-                            0.5, 
-                            (0, 0, 255), 
-                            2
-                        )
+                        x2, y2 = x1 + w, y1 + h
+                        cv2.rectangle(self.frame, (x1, y1), (x2, y2), (0, 0, 0), thickness=2)
+                        cv2.putText(self.frame, f"Defence ({conf:.2f})", (x1, y1 - 10), self.font, 0.7, (0, 0, 0), 2, lineType=cv2.LINE_AA)
+                        
                     if conf > 0.1 and current_class == "Player":
-                        #self.hoop_pos.append((center, self.frame_count, w, h, conf))
                         x2, y2 = x1 + w, y1 + h
                         cv2.rectangle(self.frame, (x1, y1), (x2, y2), (0, 152, 248), thickness=2)
                         cv2.putText(self.frame, f"Player ({conf:.2f})", (x1, y1 - 10), self.font, 0.7, (0, 152, 248), 2, lineType=cv2.LINE_AA)
