@@ -2,30 +2,26 @@ import math
 import numpy as np
 
 
-def score(ball_pos, hoop_pos):
-    x = []
-    y = []
-    rim_height = hoop_pos[-1][0][1] - 0.5 * hoop_pos[-1][3]
+def score(self):
+    # Ensure both ball and hoop positions are available
+    if len(self.hoop_pos) == 0 or len(self.ball_pos) == 0:
+        return False
 
-    # Get first point above rim and first point below rim
-    for i in reversed(range(len(ball_pos))):
-        if ball_pos[i][0][1] < rim_height:
-            if i + 1 < len(ball_pos):
-                x.append(ball_pos[i][0][0])
-                y.append(ball_pos[i][0][1])
-                x.append(ball_pos[i+1][0][0])
-                y.append(ball_pos[i+1][0][1])
-            break
-        
-    if len(x) > 1:
-        m, b = np.polyfit(x, y, 1)
-        #print(x, y)
-        # Checks if projected line fits between the ends of the rim {x = (y-b)/m}
-        predicted_x = ((hoop_pos[-1][0][1] - 0.5*hoop_pos[-1][3]) - b)/m
-        rim_x1 = hoop_pos[-1][0][0] - 0.4 * hoop_pos[-1][2]
-        rim_x2 = hoop_pos[-1][0][0] + 0.4 * hoop_pos[-1][2]
-        if rim_x1 < predicted_x < rim_x2:
-            return True
+    # Get the most recent positions
+    ball = self.ball_pos[-1][0]  # (x, y) of the ball
+    hoop = self.hoop_pos[-1][0]  # (x, y) of the hoop
+
+    # Define thresholds for scoring
+    hoop_radius = 10  # Adjust based on video resolution and hoop size
+    vertical_threshold = 15  # Vertical allowance for scoring
+
+    # Check if the ball is inside the hoop region
+    within_horizontal = abs(ball[0] - hoop[0]) <= hoop_radius
+    below_hoop = ball[1] > hoop[1]  # Ensure ball is below the hoop
+
+    if within_horizontal and below_hoop:
+        return True
+    return False
 
 
 # shot attempts
