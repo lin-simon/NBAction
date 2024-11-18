@@ -89,7 +89,7 @@ def clean_ball_pos(ball_pos, frame_count):
             ball_pos.pop()
 
     if len(ball_pos) > 0:
-        if frame_count - ball_pos[0][1] > 1:
+        if frame_count - ball_pos[0][1] > 15:
             ball_pos.pop(0)
 
     return ball_pos
