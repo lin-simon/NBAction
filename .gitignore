@@ -2,5 +2,6 @@ __pycache__/
 .pyc
 nbaction-cps843.v2i.yolov8/
 nbaction-V4/
-NBAction/testset/David.mp4
-NBAction/testset/TMU.mp4
+testset/David.mp4
+testset/TMU.mp4
+testset/
