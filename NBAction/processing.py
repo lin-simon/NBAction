@@ -3,28 +3,21 @@ import numpy as np
 
 
 def score(self):
-    # Ensure both ball and hoop positions are available
+
     if len(self.hoop_pos) == 0 or len(self.ball_pos) == 0:
         return False
 
-    # Get the most recent positions
-    ball = self.ball_pos[-1][0]  # (x, y) of the ball
-    hoop = self.hoop_pos[-1][0]  # (x, y) of the hoop
+    hoop_center = self.hoop_pos[-1][0] 
+    hoop_radius = int(max(self.hoop_pos[-1][2], self.hoop_pos[-1][3]) * 0.5)  
+    ball_center = self.ball_pos[-1][0] 
 
-    # Define thresholds for scoring
-    hoop_radius = 10  # Adjust based on video resolution and hoop size
-    vertical_threshold = 15  # Vertical allowance for scoring
+    distance = math.sqrt((ball_center[0] - hoop_center[0]) ** 2 + (ball_center[1] - hoop_center[1]) ** 2)
 
-    # Check if the ball is inside the hoop region
-    within_horizontal = abs(ball[0] - hoop[0]) <= hoop_radius
-    below_hoop = ball[1] > hoop[1]  # Ensure ball is below the hoop
-
-    if within_horizontal and below_hoop:
+    if distance <= hoop_radius and ball_center[1] > hoop_center[1]:
         return True
+
     return False
 
-
-# shot attempts
 def detect_down(ball_pos, hoop_pos):
     y = hoop_pos[-1][0][1] + 0.5 * hoop_pos[-1][3]
     if ball_pos[-1][0][1] > y:
@@ -57,23 +50,18 @@ def in_hoop_region(center, hoop_pos):
     return False
 
 
-# Removes inaccurate data points
 def clean_ball_pos(ball_pos, frame_count):
-    # Removes inaccurate ball size to prevent jumping to wrong ball
     if len(ball_pos) > 1:
-        # Width and Height
         w1 = ball_pos[-2][2]
         h1 = ball_pos[-2][3]
         w2 = ball_pos[-1][2]
         h2 = ball_pos[-1][3]
 
-        # X and Y coordinates
         x1 = ball_pos[-2][0][0]
         y1 = ball_pos[-2][0][1]
         x2 = ball_pos[-1][0][0]
         y2 = ball_pos[-1][0][1]
 
-        # Frame count
         f1 = ball_pos[-2][1]
         f2 = ball_pos[-1][1]
         f_dif = f2 - f1
@@ -116,15 +104,12 @@ def clean_hoop_pos(hoop_pos):
 
         max_dist = 0.5 * math.sqrt(w1 ** 2 + h1 ** 2)
 
-        # Hoop should not move 0.5x its diameter within 5 frames
         if dist > max_dist and f_dif < 5:
             hoop_pos.pop()
 
-        # Hoop should be relatively square
         if (w2*1.3 < h2) or (h2*1.3 < w2):
             hoop_pos.pop()
 
-    # Remove old points
     if len(hoop_pos) > 10:
         hoop_pos.pop(0)
 

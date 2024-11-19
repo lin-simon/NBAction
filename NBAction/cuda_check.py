@@ -1,6 +1,6 @@
 import torch
 import torchvision
-
+#for checking if CUDA compatible for faster training
 print("PyTorch version:", torch.__version__)
 print("Torchvision version:", torchvision.__version__)
 print("CUDA available:", torch.cuda.is_available())

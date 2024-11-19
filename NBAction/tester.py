@@ -2,7 +2,7 @@ from ultralytics import YOLO
 import cv2
 import cvzone
 import math
-
+#just for testing the models on still frames/images
 class ImageReaderWithDetection:
     def __init__(self):
         self.model = YOLO("runs/detect/train14/weights/best.pt")
