@@ -5,10 +5,10 @@ import math
 
 class ImageReaderWithDetection:
     def __init__(self):
-        self.model = YOLO("runs/detect/train9/weights/best.pt")
+        self.model = YOLO("runs/detect/train14/weights/best.pt")
         self.class_names = ['Basketball', 'Basketball Hoop', 'Defence', 'Player', 'shooting']
 
-        self.image_path = "testset/block.png"
+        self.image_path = "testset/shoot.jpg"
         self.image = cv2.imread(self.image_path)
 
         self.detect_objects()

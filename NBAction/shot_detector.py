@@ -11,8 +11,8 @@ class ShotDetector:
         self.class_names = ['Basketball', 'Basketball Hoop', 'Defence', 'Player', 'shooting']
 
         #self.cap = cv2.VideoCapture(0) -- for live capture of games
-        #self.cap = cv2.VideoCapture("testset/TMU.mp4")
-        self.cap = cv2.VideoCapture("testset/glaze.mp4") 
+        self.cap = cv2.VideoCapture("testset/test.mov") # 2 & 3 5
+        #self.cap = cv2.VideoCapture("testset/glaze.mp4") 
         self.ball_pos = []
         self.hoop_pos = []  
         self.frame_count = 0
@@ -32,7 +32,7 @@ class ShotDetector:
 
         self.show_score_text = False
         self.score_text_frame_count = 0
-        self.score_text_duration = 90
+        self.score_text_duration = 200
         self.font = cv2.FONT_HERSHEY_DUPLEX
         cv2.namedWindow('NBAction', cv2.NORM_MINMAX)
         self.run()
@@ -149,13 +149,11 @@ class ShotDetector:
                     self.score_text_frame_count = self.score_text_duration
                 else:
                     self.display_text("Miss!")
-                    self.overlay_color = (0, 0, 255)  # Red for miss
+                    self.overlay_color = (0, 0, 255)  
                     self.fade_counter = self.fade_frames
                     
     def display_score(self):
         text = str(self.makes) + " / " + str(self.attempts)
-
-
         frame_height, frame_width, _ = self.frame.shape
 
         text_size = cv2.getTextSize(text, self.font, 2, 5)[0] 
@@ -177,7 +175,7 @@ class ShotDetector:
             self.fade_counter -= 1
 
     def display_text(self, text):
-        cv2.putText(self.frame, text, (50, 50), self.font, 4, (0, 0, 0), 6)
+        cv2.putText(self.frame, text, (320, 100), self.font, 2, (0,255,0), 6)
 
 if __name__ == "__main__":
     ShotDetector()
