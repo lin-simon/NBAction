@@ -7,12 +7,12 @@ from utils import score, detect_down, detect_up, in_hoop_region, clean_hoop_pos,
 
 class ShotDetector:
     def __init__(self):
-        self.model = YOLO("runs/detect/train9/weights/best.pt")
+        self.model = YOLO("runs/detect/train14/weights/best.pt")
         self.class_names = ['Basketball', 'Basketball Hoop', 'Defence', 'Player', 'shooting']
 
         #self.cap = cv2.VideoCapture(0) -- for live capture of games
         #self.cap = cv2.VideoCapture("testset/TMU.mp4")
-        self.cap = cv2.VideoCapture("testset/4.mov") 
+        self.cap = cv2.VideoCapture("testset/glaze.mp4") 
         self.ball_pos = []
         self.hoop_pos = []  
         self.frame_count = 0
