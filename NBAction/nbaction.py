@@ -4,13 +4,12 @@ import math
 import numpy as np
 from processing import score, within_shot_radius, stabilize_hoop, stabilize_ball
 
-
 class NBAction:
     def __init__(self):
 
         self.model = YOLO("runs/detect/train14/weights/best.pt")
         self.classes = ['Basketball', 'Basketball Hoop', 'Defence', 'Player', 'shooting']
-        self.video = cv2.VideoCapture("testset/trim4.mp4")
+        self.video = cv2.VideoCapture("testset/trim5.mp4")
        
        
         self.current_frame = None
