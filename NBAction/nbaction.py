@@ -1,7 +1,8 @@
 from ultralytics import YOLO
+import numpy as np
 import cv2
 import math
-import numpy as np
+
 from processing import score, within_shot_radius, stabilize_hoop, stabilize_ball
 
 class NBAction:
@@ -52,39 +53,39 @@ class NBAction:
                     x1, y1, x2, y2 = box.xyxy[0]
                     x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)
                     w, h = x2 - x1, y2 - y1
-
-                    conf = math.ceil((box.conf[0] * 100)) / 100
-
+                    center = (int(x1 + w / 2), int(y1 + h / 2))
+                    confidence = math.ceil((box.conf[0] * 100)) / 100
                     cclass = self.classes[int(box.cls[0])]
 
-                    center = (int(x1 + w / 2), int(y1 + h / 2))
+                
+                
 
-                    if (conf > 0.2 or (within_shot_radius(center, self.hoop) and conf > 0.1)) and cclass == "Basketball":
-                        self.ball.append((center, self.total, w, h, conf))
+                    if (confidence > 0.2 or (within_shot_radius(center, self.hoop) and confidence > 0.1)) and cclass == "Basketball":
+                        self.ball.append((center, self.total, w, h, confidence))
                         x2, y2 = x1 + w, y1 + h
                         cv2.rectangle(self.current_frame, (x1, y1), (x2, y2), (0, 0, 255), thickness=2)
-                        cv2.putText(self.current_frame, f"Basketball ({conf:.2f})", (x1, y1 - 10), self.font, 0.6, (0, 0, 255), 1, lineType=cv2.LINE_AA)
+                        cv2.putText(self.current_frame, f"Basketball ({confidence:.2f})", (x1, y1 - 10), self.font, 0.6, (0, 0, 255), 1, lineType=cv2.LINE_AA)
 
-                    if conf > 0.5 and cclass == "Basketball Hoop":
-                        self.hoop.append((center, self.total, w, h, conf))
+                    if confidence > 0.5 and cclass == "Basketball Hoop":
+                        self.hoop.append((center, self.total, w, h, confidence))
                         x2, y2 = x1 + w, y1 + h
                         cv2.rectangle(self.current_frame, (x1, y1), (x2, y2), (255, 55, 174), thickness=2)
-                        cv2.putText(self.current_frame, f"Basketball Hoop ({conf:.2f})", (x1, y1 - 10), self.font, 0.6, (0, 255, 0), 1, lineType=cv2.LINE_AA)
+                        cv2.putText(self.current_frame, f"Basketball Hoop ({confidence:.2f})", (x1, y1 - 10), self.font, 0.6, (0, 255, 0), 1, lineType=cv2.LINE_AA)
                         
-                    if conf > 0.5 and cclass == "Defence":
+                    if confidence > 0.5 and cclass == "Defence":
                         x2, y2 = x1 + w, y1 + h
                         cv2.rectangle(self.current_frame, (x1, y1), (x2, y2), (0, 0, 0), thickness=2)
-                        cv2.putText(self.current_frame, f"Defence ({conf:.2f})", (x1, y1 - 10), self.font, 0.6, (0, 0, 0), 1, lineType=cv2.LINE_AA)
+                        cv2.putText(self.current_frame, f"Defence ({confidence:.2f})", (x1, y1 - 10), self.font, 0.6, (0, 0, 0), 1, lineType=cv2.LINE_AA)
                         
-                    if conf > 0.2 and cclass == "Player":
+                    if confidence > 0.2 and cclass == "Player":
                         x2, y2 = x1 + w, y1 + h
                         cv2.rectangle(self.current_frame, (x1, y1), (x2, y2), (0, 152, 248), thickness=2)
-                        cv2.putText(self.current_frame, f"Player ({conf:.2f})", (x1, y1 - 10), self.font, 0.6, (0, 152, 248), 1, lineType=cv2.LINE_AA)
+                        cv2.putText(self.current_frame, f"Player ({confidence:.2f})", (x1, y1 - 10), self.font, 0.6, (0, 152, 248), 1, lineType=cv2.LINE_AA)
                         
-                    if conf > 0 and cclass == "shooting":
-                        self.hoop.append((center, self.total, w, h, conf))
+                    if confidence > 0 and cclass == "shooting":
+                        self.hoop.append((center, self.total, w, h, confidence))
                         cv2.rectangle(self.current_frame, (x1, y1), (x2, y2), (255, 0, 0), thickness=2)
-                        cv2.putText(self.current_frame, f"Shooting ({conf:.2f})", (x1, y1 - 10), self.font, 0.6, (255,0,0), 1, lineType=cv2.LINE_AA)
+                        cv2.putText(self.current_frame, f"Shooting ({confidence:.2f})", (x1, y1 - 10), self.font, 0.6, (255,0,0), 1, lineType=cv2.LINE_AA)
             
             #Run state functions every current_frame
             self.update_state()
@@ -174,8 +175,8 @@ class NBAction:
         text_x = (current_frame_width - text_width) // 2
         text_y = (current_frame_height + text_height) // 2
 
-        cv2.putText(self.current_frame, text, (text_x, text_y-400), self.font, 2, (0, 0, 0), 9, lineType=cv2.LINE_AA)
-        cv2.putText(self.current_frame, text, (text_x, text_y-400), self.font, 2, (0, 255, 0), 4, lineType=cv2.LINE_AA)
+        cv2.putText(self.current_frame, text, (text_x, text_y-300), self.font, 2, (0, 0, 0), 9, lineType=cv2.LINE_AA)
+        cv2.putText(self.current_frame, text, (text_x, text_y-300), self.font, 2, (0, 255, 0), 4, lineType=cv2.LINE_AA)
 
 if __name__ == "__main__":
     NBAction()
