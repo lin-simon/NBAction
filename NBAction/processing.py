@@ -51,6 +51,12 @@ def in_hoop_region(center, hoop_pos):
 
 
 def clean_ball_pos(ball_pos, frame_count):
+    #Upper limit on recent ball positions (the red dots)
+    #This is here to avoid some glitches where dots appear all over the screen when the ball travels too quickly and disappears offscreen
+    max_ball_count = 30
+    if len(ball_pos) > max_ball_count:
+        return []  # Reset all ball positions if limit exceeded
+
     if len(ball_pos) > 1:
         w1 = ball_pos[-2][2]
         h1 = ball_pos[-2][3]
@@ -70,18 +76,15 @@ def clean_ball_pos(ball_pos, frame_count):
 
         max_dist = 4 * math.sqrt((w1) ** 2 + (h1) ** 2)
 
-        if (dist > max_dist) and (f_dif < 5):
+        # Check for glitches: sudden large distance, mismatched aspect ratio
+        if (dist > max_dist and f_dif < 5) or (w2 * 1.4 < h2) or (h2 * 1.4 < w2):
             ball_pos.pop()
 
-        elif (w2*1.4 < h2) or (h2*1.4 < w2):
-            ball_pos.pop()
-
-    if len(ball_pos) > 0:
-        if frame_count - ball_pos[0][1] > 15:
-            ball_pos.pop(0)
+    # Remove stale ball positions
+    if len(ball_pos) > 0 and frame_count - ball_pos[0][1] > 5:
+        ball_pos.pop(0)
 
     return ball_pos
-
 
 def clean_hoop_pos(hoop_pos):
     if len(hoop_pos) > 1:
@@ -110,7 +113,7 @@ def clean_hoop_pos(hoop_pos):
         if (w2*1.3 < h2) or (h2*1.3 < w2):
             hoop_pos.pop()
 
-    if len(hoop_pos) > 10:
+    if len(hoop_pos) > 25:
         hoop_pos.pop(0)
 
     return hoop_pos

@@ -12,8 +12,8 @@ class NBAction:
         self.class_names = ['Basketball', 'Basketball Hoop', 'Defence', 'Player', 'shooting']
         self.shots_made = 0  
         self.ball_in_hoop = False 
-        self.cap = cv2.VideoCapture("testset/TMU.mp4")
-        self.cooldown_frames = 500 
+        self.cap = cv2.VideoCapture("testset/trim2.mp4")
+        self.cooldown_frames = 500
         self.last_attempt_frame = -self.cooldown_frames 
         self.ball_pos = []  
         self.hoop_pos = []  
@@ -68,7 +68,7 @@ class NBAction:
                         cv2.rectangle(self.frame, (x1, y1), (x2, y2), (0, 255, 0), thickness=2)
                         cv2.putText(self.frame, f"Basketball Hoop ({conf:.2f})", (x1, y1 - 10), self.font, 0.6, (0, 255, 0), 1, lineType=cv2.LINE_AA)
                         
-                    if conf > 0.4 and current_class == "Defence":
+                    if conf > 0.5 and current_class == "Defence":
                         x2, y2 = x1 + w, y1 + h
                         cv2.rectangle(self.frame, (x1, y1), (x2, y2), (0, 0, 0), thickness=2)
                         cv2.putText(self.frame, f"Defence ({conf:.2f})", (x1, y1 - 10), self.font, 0.6, (0, 0, 0), 1, lineType=cv2.LINE_AA)
