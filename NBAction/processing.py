@@ -1,16 +1,18 @@
 import math
 import numpy as np
 
-
-def score(self):
-
+def in_hoop(self):
+    #Check if the ball is inside the net. -- True if a successful shot
+    #We make sure at least one hoop and ball is in the current frame
     if len(self.hoop) == 0 or len(self.ball) == 0:
         return False
-
+    #Grab the center of the hoop, grab the most recent center of the ball
     hoop_center = self.hoop[-1][0] 
-    hoop_radius = int(max(self.hoop[-1][2], self.hoop[-1][3]) * 0.5)  
     ball_center = self.ball[-1][0] 
-
+    #We draw a radius from the center of the hoop with a diameter same size as the full length of the net of the hoop.
+    hoop_radius = int(max(self.hoop[-1][2], self.hoop[-1][3]) * 0.5)  
+    
+    #We use a simple distance formula to calculate the difference between the center of the ball, to the center of the hoop.
     distance = math.sqrt((ball_center[0] - hoop_center[0]) ** 2 + (ball_center[1] - hoop_center[1]) ** 2)
 
     if distance <= hoop_radius and ball_center[1] > hoop_center[1]:
