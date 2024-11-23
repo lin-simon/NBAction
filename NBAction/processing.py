@@ -20,22 +20,6 @@ def in_hoop(self):
 
     return False
 
-def detect_down(ball, hoop):
-    y = hoop[-1][0][1] + 0.5 * hoop[-1][3]
-    if ball[-1][0][1] > y:
-        return True
-    return False
-
-def detect_up(ball, hoop):
-    x1 = hoop[-1][0][0] - 4 * hoop[-1][2]
-    x2 = hoop[-1][0][0] + 4 * hoop[-1][2]
-    y1 = hoop[-1][0][1] - 2 * hoop[-1][3]
-    y2 = hoop[-1][0][1]
-
-    if x1 < ball[-1][0][0] < x2 and y1 < ball[-1][0][1] < y2 - 0.5 * hoop[-1][3]:
-        return True
-    return False
-
 def within_shot_radius(center, hoop):
     if len(hoop) < 1:
         return False
