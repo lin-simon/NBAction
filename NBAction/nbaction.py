@@ -2,18 +2,19 @@ from ultralytics import YOLO
 import numpy as np
 import cv2
 
-from processing import score, within_shot_radius, stabilize_hoop, stabilize_ball
+from math import ceil
+from processing import in_hoop, within_shot_radius, stabilize_hoop, stabilize_ball
 
 class NBAction:
     def __init__(self):
         #Load our best iteration of NBAction object detection model.
-        self.model = YOLO("NBAction-main/runs/detect/train9/weights/best.pt") #Our 5th iteration of our object detection model, we reached a shot detection rate of 92% and experienced diminishing returns, so we stopped here.
+        self.model = YOLO("NBAction/best.pt") 
         #self.model = YOLO("NBAction-main/NBAction/best.pt")
         #Image Classes we trained our model on to detect
         self.classes = ['Basketball', 'Basketball Hoop', 'Defence', 'Player', 'shooting']
         #Load a video to be analyzed. (/testset contains all our test videos, but feel free to upload your own basketball footage and change the path to the video.)
         #Higher resolution is preferred, majority of our test videos are recored in 1080p 60fps for better accuracy, but can get away with 720p 30fps,
-        self.video = cv2.VideoCapture("NBAction-main/testset/harris3.mov")
+        self.video = cv2.VideoCapture("testset/1.mov")
 
         #Initialize the current frame and total frames (Variables C and T, as defined in our IEEE paper.)
         self.current_frame = None
@@ -74,19 +75,22 @@ class NBAction:
                     center = (x_min + width // 2, y_min + height // 2)
 
                     #Round class confidence to 2 sig figs
-                    confidence = round(box.conf[0] * 100) / 100
+                    confidence = ceil((box.conf[0]) * 100) / 100 
                     #Grab the current class detected by the model.
                     cclass = self.classes[int(box.cls[0])]
 
-                    #Check each class sequentially for a match and compare confidence thresholds -- adjust as needed, but current values are our most consistent across tests. 
+                    #Check each class sequentially for a match and compare confidence thresholds -- current values are our most consistent across tests. 
                     #Approx. 92% Detection succession rate of successful shots with current values.
                     if cclass == "Basketball":
                         if confidence > 0.5 or (within_shot_radius(center, self.hoop) and confidence > 0.1):
-                            # Keep track of the single most confident basketball -- helps avoid any anomalies, i.e more than one basketball in frame, basketball shaped objects...
+                            """
+                            Keep track of the single most confident basketball -- helps avoid any anomalies, 
+                            i.e more than one basketball in frame, basketball shaped objects.
+                            """
                             if most_confident_ball is None or confidence > most_confident_ball["confidence"]:
                                 #Store attributes of most confident current ball in frame
                                 most_confident_ball = {
-                                    "center": center, "confidence": confidence, "box": (x1, y1, x2, y2), "width": w, "height": h
+                                    "center": center, "confidence": confidence, "box": (x1, y1, x2, y2), "width": width, "height": height
                                 }
 
                         # Process the most confident basketball-- if any
@@ -94,35 +98,35 @@ class NBAction:
                             center = most_confident_ball["center"]
                             confidence = most_confident_ball["confidence"]
                             x1, y1, x2, y2 = most_confident_ball["box"]
-                            w, h = most_confident_ball["width"], most_confident_ball["height"]
+                            width, height = most_confident_ball["width"], most_confident_ball["height"]
 
-                            self.ball.append((center, self.total, w, h, confidence))
+                            self.ball.append((center, self.total, width, height, confidence))
                             #We draw bounding boxes and label the detected ball in the current frame.
                             cv2.rectangle(self.current_frame, (x1, y1), (x2, y2), (0, 0, 255), thickness=2)
                             cv2.putText(self.current_frame, f"Basketball ({confidence:.2f})", (x1, y1 - 10), self.font, 0.6, (0, 0, 255), 1, lineType=cv2.LINE_AA)
                     
                     #Identify hoops in current frame, we add its current position in frame to the hoop list to later process shots.
                     if confidence > 0.5 and cclass == "Basketball Hoop":
-                        self.hoop.append((center, self.total, w, h, confidence))
-                        x2, y2 = x1 + w, y1 + h
+                        self.hoop.append((center, self.total, width, height, confidence))
+                        x2, y2 = x_min + width, y_min + height
                         cv2.rectangle(self.current_frame, (x1, y1), (x2, y2), (255, 55, 174), thickness=2)
                         cv2.putText(self.current_frame, f"Basketball Hoop ({confidence:.2f})", (x1, y1 - 10), self.font, 0.6, (0, 255, 0), 1, lineType=cv2.LINE_AA)
                     
                     #Identify any likely defending players (arms wide, arms high, no ball in possession)
                     if confidence > 0.5 and cclass == "Defence":
-                        x2, y2 = x1 + w, y1 + h
+                        x2, y2 = x_min + width, y_min + height
                         cv2.rectangle(self.current_frame, (x1, y1), (x2, y2), (0, 0, 0), thickness=2)
                         cv2.putText(self.current_frame, f"Defence ({confidence:.2f})", (x1, y1 - 10), self.font, 0.6, (0, 0, 0), 1, lineType=cv2.LINE_AA)
                     
                     #Identify everyone else
                     if confidence > 0.4 and cclass == "Player":
-                        x2, y2 = x1 + w, y1 + h
+                        x2, y2 = x_min + width, y_min + height
                         cv2.rectangle(self.current_frame, (x1, y1), (x2, y2), (0, 152, 248), thickness=2)
                         cv2.putText(self.current_frame, f"Player ({confidence:.2f})", (x1, y1 - 10), self.font, 0.6, (0, 152, 248), 1, lineType=cv2.LINE_AA)
                     
                     #Identify any people currently appearing to perform a shooting motion, (3 pointer, layup, etc.)
                     if confidence > 0 and cclass == "shooting":
-                        self.hoop.append((center, self.total, w, h, confidence))
+                        self.hoop.append((center, self.total, width, height, confidence))
                         cv2.rectangle(self.current_frame, (x1, y1), (x2, y2), (255, 0, 0), thickness=2)
                         cv2.putText(self.current_frame, f"Shooting ({confidence:.2f})", (x1, y1 - 10), self.font, 0.6, (255,0,0), 1, lineType=cv2.LINE_AA)
             
@@ -174,7 +178,7 @@ class NBAction:
             # Make sure enough time has passed before checking another shot -- helps avoids the same shot being counted multiple times.
             if self.total - self.last_attempt_current_frame >= self.cooldown_current_frames:
                 #On successful shots, increment the score and display visuals
-                if score(self) and not self.ball_in_hoop:
+                if in_hoop(self) and not self.ball_in_hoop:
                     self.shots_made += 1  
                     self.overlay_color = (0, 255, 0)
                     self.frame_count = self.revert_frames
@@ -185,7 +189,7 @@ class NBAction:
                     self.show_score_text = True
                     self.score_text_total = 250 
 
-                elif not score(self):
+                elif not in_hoop(self):
                     self.ball_in_hoop = False
                         
     def display_score(self):
