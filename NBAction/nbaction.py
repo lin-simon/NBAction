@@ -90,45 +90,45 @@ class NBAction:
                             if most_confident_ball is None or confidence > most_confident_ball["confidence"]:
                                 #Store attributes of most confident current ball in frame
                                 most_confident_ball = {
-                                    "center": center, "confidence": confidence, "box": (x1, y1, x2, y2), "width": width, "height": height
+                                    "center": center, "confidence": confidence, "box": (x_min, y_min, x_max, y_max), "width": width, "height": height
                                 }
 
                         # Process the most confident basketball-- if any
                         if most_confident_ball:
                             center = most_confident_ball["center"]
                             confidence = most_confident_ball["confidence"]
-                            x1, y1, x2, y2 = most_confident_ball["box"]
+                            x_min, y_min, x_max, y_max = most_confident_ball["box"]
                             width, height = most_confident_ball["width"], most_confident_ball["height"]
 
                             self.ball.append((center, self.total, width, height, confidence))
                             #We draw bounding boxes and label the detected ball in the current frame.
-                            cv2.rectangle(self.current_frame, (x1, y1), (x2, y2), (0, 0, 255), thickness=2)
-                            cv2.putText(self.current_frame, f"Basketball ({confidence:.2f})", (x1, y1 - 10), self.font, 0.6, (0, 0, 255), 1, lineType=cv2.LINE_AA)
+                            cv2.rectangle(self.current_frame, (x_min, y_min), (x_max, y_max), (0, 0, 255), thickness=2)
+                            cv2.putText(self.current_frame, f"Basketball ({confidence:.2f})", (x_min, y_min - 10), self.font, 0.6, (0, 0, 255), 1, lineType=cv2.LINE_AA)
                     
                     #Identify hoops in current frame, we add its current position in frame to the hoop list to later process shots.
                     if confidence > 0.5 and cclass == "Basketball Hoop":
                         self.hoop.append((center, self.total, width, height, confidence))
-                        x2, y2 = x_min + width, y_min + height
-                        cv2.rectangle(self.current_frame, (x1, y1), (x2, y2), (255, 55, 174), thickness=2)
-                        cv2.putText(self.current_frame, f"Basketball Hoop ({confidence:.2f})", (x1, y1 - 10), self.font, 0.6, (0, 255, 0), 1, lineType=cv2.LINE_AA)
+                        x_max, y_max = x_min + width, y_min + height
+                        cv2.rectangle(self.current_frame, (x_min, y_min), (x_max, y_max), (255, 55, 174), thickness=2)
+                        cv2.putText(self.current_frame, f"Basketball Hoop ({confidence:.2f})", (x_min, y_min - 10), self.font, 0.6, (0, 255, 0), 1, lineType=cv2.LINE_AA)
                     
                     #Identify any likely defending players (arms wide, arms high, no ball in possession)
                     if confidence > 0.5 and cclass == "Defence":
-                        x2, y2 = x_min + width, y_min + height
-                        cv2.rectangle(self.current_frame, (x1, y1), (x2, y2), (0, 0, 0), thickness=2)
-                        cv2.putText(self.current_frame, f"Defence ({confidence:.2f})", (x1, y1 - 10), self.font, 0.6, (0, 0, 0), 1, lineType=cv2.LINE_AA)
+                        x_max, y_max = x_min + width, y_min + height
+                        cv2.rectangle(self.current_frame, (x_min, y_min), (x_max, y_max), (0, 0, 0), thickness=2)
+                        cv2.putText(self.current_frame, f"Defence ({confidence:.2f})", (x_min, y_min - 10), self.font, 0.6, (0, 0, 0), 1, lineType=cv2.LINE_AA)
                     
                     #Identify everyone else
                     if confidence > 0.4 and cclass == "Player":
-                        x2, y2 = x_min + width, y_min + height
-                        cv2.rectangle(self.current_frame, (x1, y1), (x2, y2), (0, 152, 248), thickness=2)
-                        cv2.putText(self.current_frame, f"Player ({confidence:.2f})", (x1, y1 - 10), self.font, 0.6, (0, 152, 248), 1, lineType=cv2.LINE_AA)
+                        x_max, y_max = x_min + width, y_min + height
+                        cv2.rectangle(self.current_frame, (x_min, y_min), (x_max, y_max), (0, 152, 248), thickness=2)
+                        cv2.putText(self.current_frame, f"Player ({confidence:.2f})", (x_min, y_min - 10), self.font, 0.6, (0, 152, 248), 1, lineType=cv2.LINE_AA)
                     
                     #Identify any people currently appearing to perform a shooting motion, (3 pointer, layup, etc.)
                     if confidence > 0 and cclass == "shooting":
                         self.hoop.append((center, self.total, width, height, confidence))
-                        cv2.rectangle(self.current_frame, (x1, y1), (x2, y2), (255, 0, 0), thickness=2)
-                        cv2.putText(self.current_frame, f"Shooting ({confidence:.2f})", (x1, y1 - 10), self.font, 0.6, (255,0,0), 1, lineType=cv2.LINE_AA)
+                        cv2.rectangle(self.current_frame, (x_min, y_min), (x_max, y_max), (255, 0, 0), thickness=2)
+                        cv2.putText(self.current_frame, f"Shooting ({confidence:.2f})", (x_min, y_min - 10), self.font, 0.6, (255,0,0), 1, lineType=cv2.LINE_AA)
             
             #Run state functions every current_frame
             #Stabilize the motion of the hoop and ball tracking, prevent any sudden motion jumps, check for any valid scores in current frame, display visuals.
