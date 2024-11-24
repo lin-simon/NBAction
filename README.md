@@ -3,8 +3,15 @@ Basketball is a high-paced game requiring precision, coordination and quick deci
 ![NBAction](https://github.com/lin-simon/NBAction/blob/main/assets/ui.png?raw=true)
 
 # Prerequisites
-- Python 3.8 or higher
+- Python 3.8 or higher and pip installed on your system
 - [Optional] GPU-enabled environment for faster performance
+
+# Installation Guide
+- Clone this repository onto your personal environment.
+  ```
+  git clone https://github.com/YourUsername/NBAction.git
+  cd NBAction
+  ```
 
 # Features
 - Real-time Object Detection: Identifies basketballs, hoops, players, and shooting actions in recorded or live video footage.
