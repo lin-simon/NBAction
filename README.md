@@ -16,6 +16,8 @@ cd NBAction
 - Next, install all dependencies, you can find a list of these at ```NBAction/requirements.txt```
 ```
 pip install -r requirements.txt
+or
+pip install ultralytics opencv-python numpy     (ultralytics should automatically install any missing dependencies)
 ```
 Once fully installed, navigate to nbaction.py and run the file. 
 
