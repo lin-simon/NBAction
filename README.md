@@ -8,10 +8,10 @@ Basketball is a high-paced game requiring precision, coordination and quick deci
 
 # Installation Guide
 - Clone this repository onto your personal environment through Git.
-  ```
-  git clone https://github.com/lin-simon/NBAction.git
-  cd NBAction
-  ```
+```
+git clone https://github.com/lin-simon/NBAction.git
+cd NBAction
+```
 - Alternatively, you can just download the zip and extract into your editor of choice.
 - Next, install all dependencies, you can find a list of these at ```NBAction/requirements.txt```
 ```
