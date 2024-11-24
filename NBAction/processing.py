@@ -12,7 +12,7 @@ def in_hoop(self):
     #We draw a radius from the center of the hoop with a diameter same size as the full length of the net of the hoop.
     hoop_radius = int(max(self.hoop[-1][2], self.hoop[-1][3]) * 0.5)  
     
-    #We use a simple distance formula to calculate the difference between the center of the ball, to the center of the hoop.
+    #We use Euclidean distance formula to calculate the difference between the center of the ball, to the center of the hoop.
     distance = math.sqrt((ball_center[0] - hoop_center[0]) ** 2 + (ball_center[1] - hoop_center[1]) ** 2)
     #Check if the ball is within the hoop radius and below the hoop's center. (a score)
     if distance <= hoop_radius and ball_center[1] > hoop_center[1]:
