@@ -9,7 +9,7 @@ Basketball is a high-paced game requiring precision, coordination and quick deci
 # Installation Guide
 - Clone this repository onto your personal environment.
   ```
-  git clone https://github.com/YourUsername/NBAction.git
+  git clone https://github.com/lin-simon/NBAction.git
   cd NBAction
   ```
 
