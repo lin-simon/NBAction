@@ -23,7 +23,7 @@ Or run the following into your command line:
 ```
 python main.py
 ```
-Depending on where on your machine it is installed, you may have to change filepaths in nbaction.py to load any of your own videos into the program.
+Depending on where on your machine it is installed, you may have to change filepaths in nbaction.py to load any of your own videos into the program. /testset already contains some videos you can try out to see how NBAction works.
 
 
 # Features
