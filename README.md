@@ -7,12 +7,23 @@ Basketball is a high-paced game requiring precision, coordination and quick deci
 - [Optional] GPU-enabled environment for faster performance
 
 # Installation Guide
-- Clone this repository onto your personal environment.
+- Clone this repository onto your personal environment through Git.
   ```
   git clone https://github.com/lin-simon/NBAction.git
   cd NBAction
   ```
+- Alternatively, you can just download the zip and extract into your editor of choice.
+- Next, install all dependencies, you can find a list of these at ```NBAction/requirements.txt```
+```
+pip install -r requirements.txt
+```
 
+Once installed, navigate to nbaction.py and run the file. 
+
+Or run the following into your command line:
+```
+python main.py
+```
 # Features
 - Real-time Object Detection: Identifies basketballs, hoops, players, and shooting actions in recorded or live video footage.
 - Shot Detection: Tracks basketball trajectories and detects successful scores.
