@@ -17,13 +17,15 @@ Basketball is a high-paced game requiring precision, coordination and quick deci
 ```
 pip install -r requirements.txt
 ```
-
-Once installed, navigate to nbaction.py and run the file. 
+Once fully installed, navigate to nbaction.py and run the file. 
 
 Or run the following into your command line:
 ```
 python main.py
 ```
+Depending on where on your machine it is installed, you may have to change filepaths in nbaction.py to load any of your own videos into the program.
+
+
 # Features
 - Real-time Object Detection: Identifies basketballs, hoops, players, and shooting actions in recorded or live video footage.
 - Shot Detection: Tracks basketball trajectories and detects successful scores.
