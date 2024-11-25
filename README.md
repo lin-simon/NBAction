@@ -34,4 +34,5 @@ Depending on where on your machine it is installed, you may have to change filep
 - Stabilization: Ensures smooth tracking of hoops and balls across frames to minimize anomalies.
 - Scoring Visualization: Displays scoring information with overlays and effects.
 
+# Training and Validation Loss Metrics
 ![Results](https://github.com/lin-simon/NBAction/blob/main/assets/results.png?raw=true)
