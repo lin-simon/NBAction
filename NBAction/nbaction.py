@@ -8,20 +8,19 @@ from processing import in_hoop, within_shot_radius, stabilize_hoop, stabilize_ba
 class NBAction:
     def __init__(self):
         #Load our best iteration of NBAction object detection model.
-        self.model = YOLO("NBAction/best.pt") 
+        self.model = YOLO("runs/detect/train9/weights/best.pt")
         #self.model = YOLO("NBAction-main/NBAction/best.pt")
         #Image Classes we trained our model on to detect
         self.classes = ['Basketball', 'Basketball Hoop', 'Defence', 'Player', 'shooting']
         #Load a video to be analyzed. (/testset contains all our test videos, but feel free to upload your own basketball footage and change the path to the video.)
         #Higher resolution is preferred, majority of our test videos are recored in 1080p 60fps for better accuracy, but can get away with 720p 30fps,
-        self.video = cv2.VideoCapture("testset/1.mov")
-
+        self.video = cv2.VideoCapture("testset/testm.mov") # file path here..
         #Initialize the current frame and total frames (Variables C and T, as defined in our IEEE paper.)
         self.current_frame = None
         self.frame_count = 0
         self.total = 0
 
-        #We set a cooldown between each shot tracking to avoid confusing the program into thinking multiple scores are recorded from a single successful shot
+        #We set a cooldown between each shot tracking to avoid recording multiple scores from a single successful shot
         self.cooldown_current_frames = 100
         self.last_attempt_current_frame = -self.cooldown_current_frames
         
@@ -54,13 +53,28 @@ class NBAction:
         self.run()
 
     def run(self):
-        #Some more boilerplate code for analyzing frames in a video -- https://docs.ultralytics.com/ & https://docs.opencv.org/
+        target_width = 1920
+        target_height = 1080
         while True:
             ret, self.current_frame = self.video.read()
             if not ret:
                 break
+            #Resize too small or too large videos to 1080p (lot of data was filmed in 4k)
+            current_height, current_width, _ = self.current_frame.shape
+            scale_width = target_width / current_width
+            scale_height = target_height / current_height
+            scale = min(scale_width, scale_height)  
+            new_width = int(current_width * scale)
+            new_height = int(current_height * scale)
+            self.current_frame = cv2.resize(self.current_frame, (new_width, new_height), interpolation=cv2.INTER_AREA)
 
-            #Perform model inference on the current frame
+            #Black background for phone portrait videos
+            canvas = np.zeros((target_height, target_width, 3), dtype=np.uint8)
+            x_offset = (target_width - new_width) // 2
+            y_offset = (target_height - new_height) // 2
+            canvas[y_offset:y_offset + new_height, x_offset:x_offset + new_width] = self.current_frame
+            self.current_frame = canvas
+
             detections = self.model(self.current_frame, stream=True)
 
             #Analyze all potential classes detected by the model
@@ -78,7 +92,6 @@ class NBAction:
                     confidence = ceil((box.conf[0]) * 100) / 100 
                     #Grab the current class detected by the model.
                     cclass = self.classes[int(box.cls[0])]
-
                     #Check each class sequentially for a match and compare confidence thresholds -- current values are our most consistent across tests. 
                     #Approx. 92% Detection succession rate of successful shots with current values.
                     if cclass == "Basketball":
@@ -187,7 +200,7 @@ class NBAction:
                     self.last_attempt_current_frame = self.total  
 
                     self.show_score_text = True
-                    self.score_text_total = 250 
+                    self.score_text_total = 50
 
                 elif not in_hoop(self):
                     self.ball_in_hoop = False
@@ -213,7 +226,7 @@ class NBAction:
         if self.frame_count > 0:
             effect = (self.frame_count / self.revert_frames)*0.2
             self.current_frame = cv2.addWeighted(self.current_frame, 1 - effect, np.full_like(self.current_frame, self.overlay_color), effect, 0)
-            self.frame_count -= 1
+            self.frame_count -= 5
 
     #We put the necessary functions that need to run every frame in a function to be ran together.
     def update_state(self):
