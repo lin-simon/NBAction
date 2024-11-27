@@ -1,8 +1,9 @@
 from ultralytics import YOLO
-import numpy as np
+
 import cv2
 
 from math import ceil
+from numpy import full_like, uint8, zeros
 from processing import in_hoop, within_shot_radius, stabilize_hoop, stabilize_ball
 
 class NBAction:
@@ -69,7 +70,7 @@ class NBAction:
             self.current_frame = cv2.resize(self.current_frame, (new_width, new_height), interpolation=cv2.INTER_AREA)
 
             #Black background for phone portrait videos
-            canvas = np.zeros((target_height, target_width, 3), dtype=np.uint8)
+            canvas = zeros((target_height, target_width, 3), dtype=uint8)
             x_offset = (target_width - new_width) // 2
             y_offset = (target_height - new_height) // 2
             canvas[y_offset:y_offset + new_height, x_offset:x_offset + new_width] = self.current_frame
@@ -225,7 +226,7 @@ class NBAction:
         # Show the visual effects for a certain amount of frames.
         if self.frame_count > 0:
             effect = (self.frame_count / self.revert_frames)*0.2
-            self.current_frame = cv2.addWeighted(self.current_frame, 1 - effect, np.full_like(self.current_frame, self.overlay_color), effect, 0)
+            self.current_frame = cv2.addWeighted(self.current_frame, 1 - effect, full_like(self.current_frame, self.overlay_color), effect, 0)
             self.frame_count -= 5
 
     #We put the necessary functions that need to run every frame in a function to be ran together.
