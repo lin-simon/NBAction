@@ -41,22 +41,17 @@ def stabilize_hoop(hoop):
         w1, h1 = hoop[-2][2], hoop[-2][3] 
         w2, h2 = hoop[-1][2], hoop[-1][3]
 
-        f1 = hoop[-2][1]
-        f2 = hoop[-1][1]
-
-        f_dif = f2-f1
-
         distance = math.sqrt((x2-x1)**2 + (y2-y1)**2)
         #Calculate the Euclidean distance between the last two hoop positions
         max_distance = 0.5 * math.sqrt((w1 ** 2) + (h1 ** 2))
         #Factor here is a lot smaller since hoops dont typically move (I hope)
-        if distance > max_distance and f_dif < 5:
+        if distance > max_distance and (hoop[-1][1]-hoop[-2][1]) < 5:
             hoop.pop()
         #Remove if distance is too large -- an anomaly.
         if (w2*1.3 < h2) or (h2*1.3 < w2):
             hoop.pop()
-    #Remove old hoop positions for performance.
-    if len(hoop) > 25:
+    #Only keep track of last 30 hoop positions
+    if len(hoop) > 30:
         hoop.pop(0)
 
     return hoop
@@ -75,21 +70,17 @@ def stabilize_ball(ball, frame_count):
         w1, h1 = ball[-2][2], ball[-2][3] 
         w2, h2 = ball[-1][2], ball[-1][3] 
 
-        f1 = ball[-2][1]
-        f2 = ball[-1][1]
-        
-        f_dif = f2 - f1
         #Calculate the Euclidean distance between the last two ball positions
         #More indepth explanation on IEEE report methodology section.
         distance = math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
 
         max_distance = 4 * math.sqrt((w1) ** 2 + (h1) ** 2)
         #Anomaly checker -- look for large distance jumps and remove
-        if (distance > max_distance and f_dif < 5) or (w2 * 1.4 < h2) or (h2 * 1.4 < w2):
+        if (distance > max_distance and (ball[-1][1]-ball[-2][1]) < 5) or (w2 * 1.4 < h2) or (h2 * 1.4 < w2):
             ball.pop()
             
-    #Remove old ball positions for performance
-    if len(ball) > 0 and frame_count - ball[0][1] > 10:
+    #Only keep track of last 15 ball positions
+    if len(ball) > 0 and frame_count - ball[0][1] > 15:
         ball.pop(0)
 
     return ball
