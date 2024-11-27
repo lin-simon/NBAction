@@ -19,13 +19,21 @@ pip install -r requirements.txt
 or
 pip install ultralytics opencv-python numpy     (ultralytics should automatically install any missing dependencies)
 ```
-Once fully installed, navigate to nbaction.py and run the file. 
+Once fully installed, navigate to nbaction.py.
 
-Or run the following into your command line:
+self.video = cv2.VideoCapture("testset/VIDEO_FILENAME_HERE") -- In this line, replace the placeholder with a filepath to the video you wish to test, for ease of use, put it into the testset folder which contains a number of our test videos already.
+
+For example, "testset/YourVideo.mov", to test it on "YourVideo.mov"
+
+Then, run the following into your command line:
 ```
-python nbaction.py
+python nbaction.py 
 ```
+make sure you are in the correct directory to run this, otherwise just run it through your IDE of choice.
+
 Depending on where on your machine it is installed, you may have to change filepaths in nbaction.py to load any of your own videos into the program. ```/testset``` already contains some videos you can try out to see how NBAction works.
+
+Enjoy!
 
 
 # Features
