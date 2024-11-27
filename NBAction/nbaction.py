@@ -15,7 +15,7 @@ class NBAction:
         self.classes = ['Basketball', 'Basketball Hoop', 'Defence', 'Player', 'shooting']
         #Load a video to be analyzed. (/testset contains all our test videos, but feel free to upload your own basketball footage and change the path to the video.)
         #Higher resolution is preferred, majority of our test videos are recored in 1080p 60fps for better accuracy, but can get away with 720p 30fps,
-        self.video = cv2.VideoCapture("testset/trim2.mp4") # file path here..
+        self.video = cv2.VideoCapture("testset/VIDEO_FILENAME_HERE") # file path here..
         #Initialize the current frame and total frames (Variables C and T, as defined in our IEEE paper.)
         self.current_frame = None
         self.frame_count = 0
@@ -69,7 +69,7 @@ class NBAction:
             new_height = int(current_height * scale)
             self.current_frame = cv2.resize(self.current_frame, (new_width, new_height), interpolation=cv2.INTER_AREA)
 
-            #Black background for phone portrait videos
+            #Make a background for phone portrait videos
             canvas = zeros((target_height, target_width, 3), dtype=uint8)
             x_offset = (target_width - new_width) // 2
             y_offset = (target_height - new_height) // 2
@@ -167,7 +167,6 @@ class NBAction:
         #Leave a trail most recent ball locations (we track the center of the ball at all times--crucial for our scoring detection)
         for i in range(len(self.ball)):
             cv2.circle(self.current_frame, self.ball[i][0], 2, (0, 0, 255), 2) 
-
         
         if len(self.hoop) > 0:
             #Stabilize hoops in frame,
