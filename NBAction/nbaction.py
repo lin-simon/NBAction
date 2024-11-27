@@ -14,7 +14,7 @@ class NBAction:
         self.classes = ['Basketball', 'Basketball Hoop', 'Defence', 'Player', 'shooting']
         #Load a video to be analyzed. (/testset contains all our test videos, but feel free to upload your own basketball footage and change the path to the video.)
         #Higher resolution is preferred, majority of our test videos are recored in 1080p 60fps for better accuracy, but can get away with 720p 30fps,
-        self.video = cv2.VideoCapture("testset/VIDEONAMEHERE.mp4") # file path here..
+        self.video = cv2.VideoCapture("testset/trim2.mp4") # file path here..
         #Initialize the current frame and total frames (Variables C and T, as defined in our IEEE paper.)
         self.current_frame = None
         self.frame_count = 0
