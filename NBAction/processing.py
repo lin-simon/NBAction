@@ -1,6 +1,4 @@
 import math
-import numpy as np
-
 
 def within_shot_radius(center, hoop):
     #Checks if a point is within the shot radius of the hoop.
