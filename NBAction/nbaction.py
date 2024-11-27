@@ -151,8 +151,8 @@ class NBAction:
 
             #Display the frame.
             cv2.imshow('NBAction', self.current_frame)
-            #Adjust how many current_frames program halts for, Q to exit window.
-            if cv2.waitKey(1) & 0xFF == ord('q'):  
+            #Adjust how many current_frames program halts for, X key to quiit the program.
+            if cv2.waitKey(1) & 0xFF == ord('X'):  
                 break
 
         self.video.release()
@@ -244,7 +244,7 @@ class NBAction:
         text_x = (current_frame_width - text_width) // 2
         text_y = (current_frame_height + text_height) // 2
 
-        #Attempt to get a top-middle location for our score text, probably has odd behaviour on lower resolution videos
+        #Attempt to get a top-middle location for our score text, may not scale well on higher resolution videos
         cv2.putText(self.current_frame, text, (text_x, text_y-300), self.font, 2, (0, 0, 0), 9, lineType=cv2.LINE_AA)
         cv2.putText(self.current_frame, text, (text_x, text_y-300), self.font, 2, (0, 255, 0), 4, lineType=cv2.LINE_AA)
 
