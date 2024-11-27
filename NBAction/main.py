@@ -2,6 +2,7 @@ from ultralytics import YOLO
 
 #Boilerplate model training code from ultralytics documentation.
 #CURRENT ITERATION OF OUR MODEL: v5.
+#THIS IS FOR TRAINING THE MODEL, run nbaction.py to start the project.
 if __name__ == "main":
     model = YOLO('Yolo-Weights/yolov8n.pt')
     """
