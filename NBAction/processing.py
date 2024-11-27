@@ -36,9 +36,9 @@ def stabilize_hoop(hoop):
     #Same method but for the hoop,
     if len(hoop) > 1:
         # Grab positions of the last two hoop detections
-        x1, y1 = hoop[-2][0]  # Coordinates of the second-to-last detection
-        x2, y2 = hoop[-1][0]  # Coordinates of the last detection
-        w1, h1 = hoop[-2][2], hoop[-2][3]  # Width and height of the second-to-last detection
+        x1, y1 = hoop[-2][0]  
+        x2, y2 = hoop[-1][0]  
+        w1, h1 = hoop[-2][2], hoop[-2][3] 
         w2, h2 = hoop[-1][2], hoop[-1][3]
 
         f1 = hoop[-2][1]
@@ -70,9 +70,9 @@ def stabilize_ball(ball, frame_count):
 
     if len(ball) > 1:
         #Grab positions of the last two ball detections
-        x1, y1 = ball[-2][0]  # Coordinates of the second-to-last detection
-        x2, y2 = ball[-1][0]  # Coordinates of the last detection
-        w1, h1 = ball[-2][2], ball[-2][3]  # Width and height of the second-to-last detection
+        x1, y1 = ball[-2][0]  
+        x2, y2 = ball[-1][0]  
+        w1, h1 = ball[-2][2], ball[-2][3] 
         w2, h2 = ball[-1][2], ball[-1][3] 
 
         f1 = ball[-2][1]
