@@ -29,7 +29,7 @@ Then, run the following into your command line:
 ```
 python nbaction.py 
 ```
-make sure you are in the correct directory to run this, otherwise just run it through your IDE of choice.
+Make sure you are in the correct directory to run this (../NBAction/), otherwise just run it through your IDE of choice.
 
 Depending on where on your machine it is installed, you may have to change filepaths in nbaction.py to load any of your own videos into the program. ```/testset``` already contains some videos you can try out to see how NBAction works.
 
