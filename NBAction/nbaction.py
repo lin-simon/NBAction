@@ -8,13 +8,13 @@ from processing import in_hoop, within_shot_radius, stabilize_hoop, stabilize_ba
 class NBAction:
     def __init__(self):
         #Load our best iteration of NBAction object detection model.
-        self.model = YOLO("runs/detect/train9/weights/best.pt")
+        self.model = YOLO("NBAction/best.pt")
         #self.model = YOLO("NBAction-main/NBAction/best.pt")
         #Image Classes we trained our model on to detect
         self.classes = ['Basketball', 'Basketball Hoop', 'Defence', 'Player', 'shooting']
         #Load a video to be analyzed. (/testset contains all our test videos, but feel free to upload your own basketball footage and change the path to the video.)
         #Higher resolution is preferred, majority of our test videos are recored in 1080p 60fps for better accuracy, but can get away with 720p 30fps,
-        self.video = cv2.VideoCapture("testset/best.mp4") # file path here..
+        self.video = cv2.VideoCapture("testset/VIDEONAMEHERE.mp4") # file path here..
         #Initialize the current frame and total frames (Variables C and T, as defined in our IEEE paper.)
         self.current_frame = None
         self.frame_count = 0
@@ -56,8 +56,8 @@ class NBAction:
         target_width = 1920
         target_height = 1080
         while True:
-            ret, self.current_frame = self.video.read()
-            if not ret:
+            stream, self.current_frame = self.video.read()
+            if not stream:
                 break
             #Resize too small or too large videos to 1080p (lot of data was filmed in 4k)
             current_height, current_width, _ = self.current_frame.shape
@@ -79,19 +79,19 @@ class NBAction:
 
             #Analyze all potential classes detected by the model
             for detection in detections:
-                boxes = detection.boxes
+                coordinates = detection.boxes
                 most_confident_ball = None  #Placeholder for the basketball with the highest confidence
 
-                for box in boxes:
+                for coordinate in coordinates:
                     #Extract bounding box coordinates
-                    x_min, y_min, x_max, y_max = map(int, box.xyxy[0])
+                    x_min, y_min, x_max, y_max = map(int, coordinate.xyxy[0])
                     width, height = x_max - x_min, y_max - y_min
                     center = (x_min + width // 2, y_min + height // 2)
 
                     #Round class confidence to 2 sig figs
-                    confidence = ceil((box.conf[0]) * 100) / 100 
+                    confidence = ceil((coordinate.conf[0]) * 100) / 100 
                     #Grab the current class detected by the model.
-                    cclass = self.classes[int(box.cls[0])]
+                    cclass = self.classes[int(coordinate.cls[0])]
                     #Check each class sequentially for a match and compare confidence thresholds -- current values are our most consistent across tests. 
                     #Approx. 92% Detection succession rate of successful shots with current values.
                     if cclass == "Basketball":
@@ -103,14 +103,14 @@ class NBAction:
                             if most_confident_ball is None or confidence > most_confident_ball["confidence"]:
                                 #Store attributes of most confident current ball in frame
                                 most_confident_ball = {
-                                    "center": center, "confidence": confidence, "box": (x_min, y_min, x_max, y_max), "width": width, "height": height
+                                    "center": center, "confidence": confidence, "coordinate": (x_min, y_min, x_max, y_max), "width": width, "height": height
                                 }
 
                         # Process the most confident basketball-- if any
                         if most_confident_ball:
                             center = most_confident_ball["center"]
                             confidence = most_confident_ball["confidence"]
-                            x_min, y_min, x_max, y_max = most_confident_ball["box"]
+                            x_min, y_min, x_max, y_max = most_confident_ball["coordinate"]
                             width, height = most_confident_ball["width"], most_confident_ball["height"]
 
                             self.ball.append((center, self.total, width, height, confidence))
