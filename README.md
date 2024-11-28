@@ -12,7 +12,7 @@ Basketball is a high-paced game requiring precision, coordination and quick deci
 git clone https://github.com/lin-simon/NBAction.git
 cd NBAction
 ```
-- Alternatively, you can just download the zip and extract into your editor of choice.
+- Alternatively, you can just download the zip and extract into an IDE of your choice.
 - Next, install all dependencies, you can find a list of these at ```NBAction/requirements.txt```
 ```
 pip install -r requirements.txt
