@@ -21,7 +21,7 @@ pip install ultralytics opencv-python numpy     (ultralytics should automaticall
 ```
 Once fully installed, navigate to nbaction.py.
 
-self.video = cv2.VideoCapture("testset/VIDEO_FILENAME_HERE") -- In this line, replace the placeholder with a filepath to the video you wish to test, for ease of use, put it into the testset folder which contains a number of our test videos already.
+self.video = cv2.VideoCapture("testset/VIDEO_FILENAME_HERE") -- In this line (line 18), replace the placeholder with a filepath to the video you wish to test, for ease of use, put it into the testset folder which contains a number of our test videos already.
 
 For example, "testset/YourVideo.mov", to test it on "YourVideo.mov"
 
