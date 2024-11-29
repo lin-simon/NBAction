@@ -1,6 +1,8 @@
-# NBAction
+    # NBAction
 Basketball is a high-paced game requiring precision, coordination and quick decision making. Understanding player actions is crucial for analysis and enjoyment of the sport. There are few systems available for live analysis of actions within dynamic sports environments which are common in basketball games. We present NBAction, a real-time basketball action classification and detection system utilizing computer vision techniques and frameworks. NBAction classifies common basketball actions such as shooting, scoring and defending, while also keeping track of the players, basketball and the location of the net. Our system employs a combination of self-trained and preexisting deep learning models for object recognition and classification to ensure high accuracy in a variety of basketball scenarios.
-Demo Video: https://www.youtube.com/watch?v=GODZs6gUb5Y
+Demo Video: 
+https://www.youtube.com/watch?v=GODZs6gUb5Y
+
 [![MBAction Demo Video](https://img.youtube.com/vi/GODZs6gUb5Y/0.jpg)](https://www.youtube.com/watch?v=GODZs6gUb5Y)
 ![NBAction](https://github.com/lin-simon/NBAction/blob/main/assets/ui.png?raw=true)
 
