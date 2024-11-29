@@ -19,9 +19,10 @@ cd NBAction
 pip install ultralytics (ultralytics should automatically install all req. dependencies)
 ```
 Once fully installed, navigate to nbaction.py.
-
-self.video = cv2.VideoCapture("testset/VIDEO_FILENAME_HERE"), replace the placeholder on line 18 with a filepath to the video you wish to test, for ease of use, put it into the testset folder which contains a number of our test videos already.
-
+```
+self.video = cv2.VideoCapture("testset/VIDEO_FILENAME_HERE") -- line 18
+```
+Replace the placeholder on line 18 with a filepath to the video you wish to test, for ease of use, put it into the testset folder which contains a number of our test videos already.
 For example, "testset/YourVideo.mov", to test it on "YourVideo.mov"
 
 Then, run the following into your command line:
