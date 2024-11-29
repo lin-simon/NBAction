@@ -7,6 +7,7 @@ Basketball is a high-paced game requiring precision, coordination and quick deci
 - [Optional] GPU-enabled environment for faster performance
 
 # Installation Guide
+- Video Tutorial: https://youtu.be/PTqd-ZOXUkE
 - Download the ZIP file of the repository by clicking the code dropdown.
 - Once installed, extract the contents to an IDE of your choice.
 - Alternatively, you can just clone the repository through git using:
