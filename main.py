@@ -4,7 +4,7 @@ from ultralytics import YOLO
 #CURRENT ITERATION OF OUR MODEL: v5.
 #THIS IS FOR TRAINING THE MODEL, run nbaction.py to start the project.
 if __name__ == "main":
-    model = YOLO('Yolo-Weights/yolov8n.pt')
+    model = YOLO('Yolo-Model/yolov8n.pt')
     """
     Each iteration of NBAction was trained using following hardware:
     GPU: NVIDIA RTX 3080Ti
