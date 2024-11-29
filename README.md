@@ -3,25 +3,24 @@ Basketball is a high-paced game requiring precision, coordination and quick deci
 ![NBAction](https://github.com/lin-simon/NBAction/blob/main/assets/ui.png?raw=true)
 
 # Prerequisites
-- Python 3.8 or higher and pip installed on your system
+- Python 3.9 or higher and pip installed on your system
 - [Optional] GPU-enabled environment for faster performance
 
 # Installation Guide
-- Clone this repository onto your personal environment through Git.
+- Download the ZIP file of the repository by clicking the code dropdown.
+- Once installed, extract the contents to an IDE of your choice.
+- Alternatively, you can just clone the repository through git using:
 ```
 git clone https://github.com/lin-simon/NBAction.git
 cd NBAction
 ```
-- Alternatively, you can just download the zip and extract into an IDE of your choice.
 - Next, install all dependencies, you can find a list of these at ```NBAction/requirements.txt```
 ```
-pip install -r requirements.txt
-or
-pip install ultralytics opencv-python numpy     (ultralytics should automatically install any missing dependencies)
+pip install ultralytics (ultralytics should automatically install all req. dependencies)
 ```
 Once fully installed, navigate to nbaction.py.
 
-self.video = cv2.VideoCapture("testset/VIDEO_FILENAME_HERE") -- In this line (line 18), replace the placeholder with a filepath to the video you wish to test, for ease of use, put it into the testset folder which contains a number of our test videos already.
+self.video = cv2.VideoCapture("testset/VIDEO_FILENAME_HERE"), replace the placeholder on line 18 with a filepath to the video you wish to test, for ease of use, put it into the testset folder which contains a number of our test videos already.
 
 For example, "testset/YourVideo.mov", to test it on "YourVideo.mov"
 
@@ -29,7 +28,7 @@ Then, run the following into your command line:
 ```
 python nbaction.py 
 ```
-Make sure you are in the correct directory to run this (../NBAction/), otherwise just run it through your IDE of choice.
+Make sure you are in the correct directory to run this through your terminal, otherwise just run it through your IDE of choice.
 
 Depending on where on your machine it is installed, you may have to change filepaths in nbaction.py to load any of your own videos into the program. ```/testset``` already contains some videos you can try out to see how NBAction works.
 
